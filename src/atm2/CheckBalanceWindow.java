@@ -11,19 +11,19 @@ import java.sql.*;
 
 public class CheckBalanceWindow extends JFrame implements ActionListener {
 
-    JButton backButton;
+    private JButton backButton;
 
-    TextFields textField1;
-
-
+    private TextFields textField1;
 
 
 
 
 
-    int getBalance;
 
-    String showBalance;
+
+    private int getBalance;
+
+    private String showBalance;
 
 
     CheckBalanceWindow() {

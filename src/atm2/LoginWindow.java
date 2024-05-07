@@ -8,32 +8,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.Random;
+
+
 
 
 public class LoginWindow extends JFrame implements ActionListener {
 
 
-    TextFields textField1;
+    private TextFields textField1;
 
-    JPasswordField textField2;
-
-
-    JButton button;
+    private JPasswordField textField2;
 
 
+    private JButton button;
+    private JButton button2;
+    
 
-     static  String accountNumber;
+    
+
+    static  String accountNumber;
     static String password;
+    static String accountNumberGenerated;
+    static UserInformationClass userInfo;
+    
 
 
 
 
 
-    static DatabaseConnection databaseConnection;
+  
 
 
 
@@ -88,6 +92,18 @@ public class LoginWindow extends JFrame implements ActionListener {
         label1.add(button);
         this.add(button);
 
+        
+
+        button2 = new JButton();
+        button2.setText("New User");
+        button2.setVisible(true);
+        button2.setFocusable(false);
+        button2.setFont(new Font("Arial Black" , Font.BOLD , 20));
+        button2.setBounds(520, 430, 150, 50);
+        button2.addActionListener(this);
+        label1.add(button2);
+        this.add(button2);
+
 
 
 
@@ -96,7 +112,7 @@ public class LoginWindow extends JFrame implements ActionListener {
         this.setLocation(300 , 0);
          this.getContentPane().setBackground(new Color(0,0,0));
         this.setResizable(false);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setVisible(true);
         this.add(label1);
@@ -110,42 +126,73 @@ public class LoginWindow extends JFrame implements ActionListener {
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        accountNumber = textField1.getText();
-        password = String.valueOf(textField2.getPassword());
-        if(accountNumber.isEmpty() || password.isEmpty()){
-            JOptionPane.showMessageDialog(this ,"Please enter all fields" , "Error" , JOptionPane.ERROR_MESSAGE );
-
-        }
-        else
-            userLogin(accountNumber , password);
+    
 
 
-
-
-        }
-
-
-    private void userLogin(String userName , String password) {
-        Connection dbcon = DatabaseConnection.dbConnection();
-        Connection con = DatabaseConnection.conn;
-        try {
-            String sql = "select * from accounts where client_account_number = '"+ userName + "'and client_pin = '"+ password  +"' ";
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            if (rs.next()){
-                this.dispose();
-                 new NewWindow();
-
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == button){
+            accountNumber = textField1.getText();
+            password = String.valueOf(textField2.getPassword());
+            if(accountNumber.isEmpty() || password.isEmpty()){
+                JOptionPane.showMessageDialog(this ,"Please enter all fields" , "Error" , JOptionPane.ERROR_MESSAGE );
+    
             }
             else
-                JOptionPane.showMessageDialog(this , "Password or username not found" , "Error" , JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            System.out.print("couldnt query database");
+                userLogin(accountNumber , password);
+    
         }
+        else if(e.getSource() == button2){
+               accountNumberGenerated = accountNumberGenerator();
+               this.dispose();
+               new NewUserPage();
+
+        }
+    
+    
+            }
+
+
+    private void userLogin(String accountNumber , String password) {
+                 UserInformationClass[] userInfoArray = NewUserPage.getUserArray();
+                 for(int i = 0; i < userInfoArray.length; i++){
+                 userInfo = userInfoArray[i];
+                  if(userInfo == null){
+                 JOptionPane.showMessageDialog(this , "account array is null" , "Error" , JOptionPane.INFORMATION_MESSAGE);
+              
+                   break;
+                 }
+                 String userAccountNumber = userInfo.getAccountNumber();
+                 String userPin = userInfo.getPin();
+                 if(userAccountNumber.equals(accountNumber) && userPin.equals( password) ){
+                this.dispose();
+                JOptionPane.showMessageDialog(this , "Login successful" , "Error" , JOptionPane.INFORMATION_MESSAGE);
+                 new NewWindow();
+                     break;
+                 }
+                 else if(i == userInfoArray.length - 1){
+                    JOptionPane.showMessageDialog(this , "account not found" , "Error" , JOptionPane.INFORMATION_MESSAGE);
+                   
+                 }
+                 }
+                
+
+         
+
+    }
+    private String accountNumberGenerator(){
+        String accountNumber= "";
+        Random random = new Random();
+
+        for(int i = 0 ; i < 10 ; i++){
+
+            int getRandom = random.nextInt(10);
+            accountNumber = accountNumber + getRandom;
+        }
+
+        return accountNumber.trim();
+       
 
     }
     }
+

@@ -1,7 +1,7 @@
 package atm2;
 
 
-import atm2.Button;
+
 import  java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,13 +10,13 @@ public class NewWindow extends JFrame implements ActionListener {
 
 
 
-    JButton button1;
-    JButton button2;
-    JButton button3;
+   
+   private JButton button2;
+   private JButton button3;
 
-    JButton button4;
-    JButton button5;
-    JButton button6;
+   private JButton button4;
+   
+   private JButton button6;
 
     NewWindow() {
 
@@ -38,11 +38,6 @@ public class NewWindow extends JFrame implements ActionListener {
 
 
 
-        button1 = new JButton("Transfer");
-        button1.addActionListener(this);
-        button1.setBounds(230 , 250 ,130,30);
-        button1.setFocusable(false);
-        label1.add(button1);
 
         button2 = new JButton("Withdrawal");
         button2.addActionListener(this);
@@ -53,27 +48,23 @@ public class NewWindow extends JFrame implements ActionListener {
 
         button3 = new JButton("Deposit");
         button3.addActionListener(this);
-        button3.setBounds(230 , 380 ,130,30);
+        button3.setBounds(500 , 250 ,130,30);
         button3.setFocusable(false);
         label1.add(button3);
 
 
-        button5 = new JButton("Statement");
-        button5.addActionListener(this);
-        button5.setBounds(450 , 250 ,130,30);
-        button5.setFocusable(false);
-        label1.add(button5);
+      
 
         button6 = new JButton("Check Balance");
         button6.addActionListener(this);
-        button6.setBounds(450 , 320 ,130,30);
+        button6.setBounds(500 , 320 ,130,30);
         button6.setFocusable(false);
         label1.add(button6);
 
 
         button4 = new JButton("Back");
         button4.addActionListener(this);
-        button4.setBounds(450 , 380 ,130,30);
+        button4.setBounds(370 , 400 ,130,30);
         button4.setFocusable(false);
         label1.add(button4);
 
@@ -86,7 +77,7 @@ public class NewWindow extends JFrame implements ActionListener {
         this.setLocation(300 , 0);
         this.getContentPane().setBackground(new Color(0,0,0));
         this.setResizable(false);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.add(text);
         this.add(label1);
@@ -97,11 +88,9 @@ public class NewWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == button1) {
-            this.dispose();
-              new TransferWindow();
+        
 
-        } else if (e.getSource() == button2) {
+         if (e.getSource() == button2) {
             this.dispose();
              new WithdrawalWindow();
 
@@ -113,13 +102,6 @@ public class NewWindow extends JFrame implements ActionListener {
             this.dispose();
             new LoginWindow();
 
-        }else if(e.getSource() == button5){
-            this.dispose();
-             new StatementWindow();
-
-        }else if(e.getSource() == button6)
-            this.dispose();
-          //  CheckBalanceWindow checkBalanceWindow = new CheckBalanceWindow();
 
 
 
@@ -127,5 +109,8 @@ public class NewWindow extends JFrame implements ActionListener {
 
     }
 
+   
 
+
+    }
 }

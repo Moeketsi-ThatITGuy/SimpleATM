@@ -1,50 +1,46 @@
 package atm2;
 
-import com.mysql.cj.protocol.Resultset;
+
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
 
 public class DepositWindow extends JFrame implements ActionListener {
 
 
     Frames frame;
-    TextFields depositField;
+    private  TextFields depositField;
+
+    private JButton depositButton;
+
+    private static String accountNumber;
+
+    private String amount;
+
+    private static  int verifiedAmount;
+
+   
 
 
 
+    private int getAccountValue;
 
-    JButton depositButton;
+    private static int newAmount = 0;
+
+    private JButton goBack;
+
+    
 
 
-    static String accountNumber;
-
-    String ammount;
-
-    static  int verifiedAmmount;
-
-    Resultset rs;
-
-    int rsValue = 0;
-
-    int getAccountValue;
-
-    static int newAmount;
-
-    JButton goBack;
 
 
 
 
     DepositWindow() {
 
-        getAccountValue = getAccountValue(LoginWindow.accountNumber);
 
         ImageIcon image = new ImageIcon(ClassLoader.getSystemResource("1.jpeg"));
         Image image2 = image.getImage().getScaledInstance(900,900,Image.SCALE_DEFAULT);
@@ -107,74 +103,36 @@ public class DepositWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ammount =depositField.getText();
-        verifiedAmmount = Integer.parseInt(ammount);
+        if(e.getSource() == depositButton){
+        amount =depositField.getText();
+        verifiedAmount = Integer.parseInt(amount);
 
-        if(ammount.isEmpty()){
+        if(amount.isEmpty() ){
             JOptionPane.showMessageDialog( this , "Enter amount you wish to deposit" , "Error" , JOptionPane.ERROR_MESSAGE);
         }
-        else if(!ammount.isEmpty()){
-            newAmount = getAccountValue + verifiedAmmount;
-            newUpdatedAmount(newAmount);
+        else if(!amount.isEmpty()){
+            int getAccountValue = LoginWindow.userInfo.getAccountBalance();
+             getAccountValue = getAccountValue + verifiedAmount;
             JOptionPane.showMessageDialog(this , "Deposit complete" , "Success" , JOptionPane.PLAIN_MESSAGE);
-            new Transactions("Deposit");
             new NewWindow();
         }
 
+    }
+    else{
+        this.dispose();
+        new NewWindow();
 
+    } 
+        
 
 
 
     }
 
-    public int getAccountValue(  String accountNumberLoggedinWith){
-        accountNumber = accountNumberLoggedinWith;
-        Connection dbcon =  DatabaseConnection.dbConnection();
-        Connection con = DatabaseConnection.conn;
-        String sql = "select balance from accounts where  client_account_number = '"+DepositWindow.accountNumber+"' ";
-
-        try {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+   
 
 
-
-            while( rs.next()) {
-                rsValue = rs.getInt("balance");
-            }
-            return rsValue;
-
-
-        } catch (Exception e) {
-            System.out.println("Cant find connection for deposit");
-        }
-
-        return 0;
-    }
-
-    public void newUpdatedAmount( int newAmount){
-        Connection getConnection = DatabaseConnection.dbConnection();
-        Connection connection = DatabaseConnection.conn;
-
-        String sql = "update accounts set balance = '"+  newAmount +"' where client_account_number = '"+ LoginWindow.accountNumber +"' ";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            int count = st.executeUpdate();
-
-            System.out.println(count + " rows affected");
-
-
-
-
-
-
-        } catch (Exception e) {
-            System.out.println("Couldnt update Balance");
-            JOptionPane.showMessageDialog(this , "Couldnt update balance ","Error " , JOptionPane.ERROR_MESSAGE);
-        }
-
-
-    }
+    
 
 
 }
