@@ -1,13 +1,13 @@
 package atm2;
 
-import com.mysql.cj.protocol.Resultset;
+
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+
 
 public class WithdrawalWindow extends JFrame implements ActionListener {
 
@@ -18,12 +18,10 @@ public class WithdrawalWindow extends JFrame implements ActionListener {
      static String accountNumber;
 
 
-    String ammount;
+    private String amount;
 
-   static  int verifiedAmmount;
+   private static  int verifiedAmount;
 
-
-    static int rsValue = 0;
 
     int getAccountValue;
 
@@ -38,7 +36,8 @@ public class WithdrawalWindow extends JFrame implements ActionListener {
 
     WithdrawalWindow() {
 
-         getAccountValue = getAccountValue(LoginWindow.accountNumber);
+        getAccountValue = LoginWindow.userInfo.getAccountBalance();
+
 
         ImageIcon image = new ImageIcon(ClassLoader.getSystemResource("1.jpeg"));
         Image image2 = image.getImage().getScaledInstance(900,900,Image.SCALE_DEFAULT);
@@ -48,7 +47,7 @@ public class WithdrawalWindow extends JFrame implements ActionListener {
 
 
 
-        JLabel text = new JLabel("Amount you want to withdraw");
+        JLabel text = new JLabel("your available balance is " + getAccountValue);
 
         text.setBounds(300 , 230 , 700 , 35);
         text.setForeground(Color.WHITE);
@@ -75,8 +74,14 @@ public class WithdrawalWindow extends JFrame implements ActionListener {
         label1.add(withdrawalButton);
         this.add(withdrawalButton);
 
-     ;
+        
+        goBack = new JButton("Back");
+        goBack.addActionListener(this);
+        goBack.setBounds(300 , 440 ,130,30);
+        goBack.setFocusable(false);
+        label1.add(goBack);
 
+ 
 
 
 
@@ -97,83 +102,36 @@ public class WithdrawalWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == withdrawalButton){ 
+                
+            amount = textField1.getText();
+           if(amount.isEmpty()){
+               JOptionPane.showMessageDialog( this , "Enter amount you with to withdraw" , "Error" , JOptionPane.ERROR_MESSAGE);   
+            }
 
-            ammount = textField1.getText();
-            verifiedAmmount = Integer.parseInt(ammount);
-
-
-
-         if(ammount.isEmpty()){
-               JOptionPane.showMessageDialog( this , "Enter amount you with to withdraw" , "Error" , JOptionPane.ERROR_MESSAGE);
-           }
-
-
-
-           else if(!ammount.isEmpty() && getAccountValue > verifiedAmmount){
-
-                  newAmount = getAccountValue - verifiedAmmount;
-                  newUpdatedAmount(newAmount);
-                  new Transactions("Withdrawal");
+            if(!amount.isEmpty()){
+             verifiedAmount = Integer.parseInt(amount);
+             if(getAccountValue > verifiedAmount){
+                  newAmount = getAccountValue - verifiedAmount;
+                  LoginWindow.userInfo.setAccountBalance(newAmount);
                   JOptionPane.showMessageDialog(this , "Successful Withdrawal" , "Success" , JOptionPane.PLAIN_MESSAGE);
                   this.dispose();
                   new NewWindow();
-           }
-
-
-           else if (verifiedAmmount > getAccountValue )
+             }
+             else if (verifiedAmount > getAccountValue )
                JOptionPane.showMessageDialog(this , "Insufficient funds , Check your balance" , "Error" , JOptionPane.ERROR_MESSAGE);
-
-
-
-
-
-    }
-
-    public static int getAccountValue(  String accountNumberLoggedinWith){
-        accountNumber = accountNumberLoggedinWith;
-         Connection dbcon =  DatabaseConnection.dbConnection();
-         Connection con = DatabaseConnection.conn;
-         String sql = "select balance from accounts where  client_account_number = '"+accountNumber+"' ";
-
-        try {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-
-
-            while( rs.next()) {
-                rsValue = rs.getInt("balance");
-            }
-                return rsValue;
-
-
-        } catch (Exception e) {
-            System.out.println("Cant find connection");
+           }
+           
         }
-
-      return 0;
+        else
+         new NewWindow(); 
     }
-
-    public static void newUpdatedAmount( int newAmount){
-        Connection getConnection = DatabaseConnection.dbConnection();
-        Connection connection = DatabaseConnection.conn;
-
-        String sql = "update accounts set balance = '"+  newAmount +"' where client_account_number = '"+ WithdrawalWindow.accountNumber +"' ";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-             int count = st.executeUpdate();
-
-
-
-
-        } catch (Exception e) {
-            System.out.println("Couldnt update Balance");
-        }
-
-
-    }
-
 
 }
+    
+
+
+
+
 
 

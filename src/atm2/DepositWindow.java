@@ -105,14 +105,16 @@ public class DepositWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == depositButton){
         amount =depositField.getText();
-        verifiedAmount = Integer.parseInt(amount);
+      
 
         if(amount.isEmpty() ){
             JOptionPane.showMessageDialog( this , "Enter amount you wish to deposit" , "Error" , JOptionPane.ERROR_MESSAGE);
         }
         else if(!amount.isEmpty()){
+            verifiedAmount = Integer.parseInt(amount);
             int getAccountValue = LoginWindow.userInfo.getAccountBalance();
              getAccountValue = getAccountValue + verifiedAmount;
+             LoginWindow.userInfo.setAccountBalance(getAccountValue);
             JOptionPane.showMessageDialog(this , "Deposit complete" , "Success" , JOptionPane.PLAIN_MESSAGE);
             new NewWindow();
         }
