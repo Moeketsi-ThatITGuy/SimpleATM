@@ -1,13 +1,13 @@
-/* package atm2;
+package atm2;
 
-import com.mysql.cj.protocol.Resultset;
+
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+
 
 public class CheckBalanceWindow extends JFrame implements ActionListener {
 
@@ -21,21 +21,11 @@ public class CheckBalanceWindow extends JFrame implements ActionListener {
 
 
 
-    private int getBalance;
-
-    private String showBalance;
 
 
     CheckBalanceWindow() {
 
-        try{
-            getBalance = WithdrawalWindow.getAccountValue(LoginWindow.accountNumber);
-            showBalance = Integer.toString(getBalance);
-            System.out.println(getBalance);
-        }catch(Exception ex){
-
-            System.out.println("Couldnt get First account value");
-        }
+        
 
         ImageIcon image = new ImageIcon(ClassLoader.getSystemResource("1.jpeg"));
         Image image2 = image.getImage().getScaledInstance(900, 900, Image.SCALE_DEFAULT);
@@ -51,7 +41,7 @@ public class CheckBalanceWindow extends JFrame implements ActionListener {
         text.setFont(new Font("System", Font.BOLD, 16));
         label1.add(text);
 
-        textField1 = new TextFields("R " + showBalance);
+        textField1 = new TextFields("R " + LoginWindow.userInfo.getAccountBalance());
         textField1.setEditable(false);
         textField1.setBounds(300, 300, 350, 50);
         label1.add(textField1);
@@ -88,4 +78,4 @@ public class CheckBalanceWindow extends JFrame implements ActionListener {
     }
 
 
-}*/
+}
